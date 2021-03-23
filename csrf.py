@@ -41,3 +41,14 @@ from core.zetanize import zetanize
 from core.requester import requester
 from core.utils import extractHeaders, strength, isProtected, stringToBinary, longestCommonSubstring
 
+parser = argparse.ArgumentParser()
+parser.add_argument('-u', help='target url', dest='target')
+parser.add_argument('-t', help='number of threads', dest='threads', type=int)
+parser.add_argument('-l', help='levels to crawl', dest='level', type=int)
+parser.add_argument('--delay', help='delay between requests',
+                    dest='delay', type=int)
+parser.add_argument('--timeout', help='http request timeout',
+                    dest='timeout', type=int)
+parser.add_argument('--headers', help='http headers',
+                    dest='add_headers', nargs='?', const=True)
+args = parser.parse_args()
