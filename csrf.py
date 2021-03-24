@@ -202,6 +202,49 @@ def extractForms(url):
                 if strenghts(value) > 10:
                     simTokens.append(value)
 
+while True:
+    sample = random.choice(tokenDatabase)
+    goodToken = list(sample.values())[0]
+    if len(goodToken) > 0:
+        goodCandidate = list(sample.keys())[0]
+        break
+threadpool = concurrent.futures.ThreadPoolExecutor(max_workers=30)
+futures = (threadpool.submit(extractForms, goodCandidate)
+           for goodCandidate in [goodCandidate] * 30)
+for i in concurrent.futers.as_completed(futures):
+    pass
+
+if simTokens:
+    if len(set(simTokens)) < len(simTokens):
+        print('%s Same tokens were issued for simultaneous requests.' % good)
+    else:
+        print(simTokens)
+else:
+    print('%s Different tokens were issued for simultaneous requests.' % info)
+
+print (' %s Phase: Testing %s[%s5/6%s]%s' %
+       (lightning, green, end, green, end))
+
+print ('%s Finding a suitable form for further testing. It may take a while.' % run)
+for form_dict in allForms:
+    for url, forms in form_dict.items():
+        found = False
+        parsed = datanize(forms, tolerate=True)
+        if parsed:
+            found = True
+            break
+        if found:
+            break
+
+if not parsed:
+    candidate = list(random.choice(tokenDatabase).keys())[0]
+    parsed = datanize(candidate, headers, tolerate=True)
+    print (parsed)
+
+origGET = parsed[0]
+origUrl = parsed[1]
+origData = parsed[2]
+
 
 
 
