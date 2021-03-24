@@ -52,3 +52,54 @@ parser.add_argument('--timeout', help='http request timeout',
 parser.add_argument('--headers', help='http headers',
                     dest='add_headers', nargs='?', const=True)
 args = parser.parse_args()
+
+if not args.target:
+    print('\n' + parser.format_help())
+    quit()
+
+if type(args.add_headers) == bool:
+    headers = extractHeaders(prompt())
+elif type(args.add_headers) == str:
+    headers = extractHeaders(args.add_headers)
+else:
+    from core.config import headers
+
+target = args.target
+delay = args.delay or 0
+level = args.level or 2
+timeout = args.timeout or 20
+threadCount = args.threads or 2
+
+allTokens = []
+weakTokens = []
+tokenDatabase = []
+insecureForms = []
+
+print (' %s Phase: Crawling %s[%s1/6%s]%s' %
+       (lightning, green, end, green, end))
+dataset = photon(target, headers, level, threadCount)
+allForms = dataset[0]
+print ('\r%s Crawled %i URL(s) and found %i form(s).%-10s' %
+       (info, dataset[1], len(allForms), ' '))
+print (' %s Phase: Evaluating %s[%s2/6%s]%s' %
+       (lightning, green, end, green, end))
+evaluate(allFroms, weakTokens, tokenDatabase, allTokens, insecureForms)
+
+if weakTokens:
+    print ('%s Weak token(s) found' % good)
+    for weakToken in weakTokens:
+        url = list(weakToken.keys())[0]
+        token = list(weakToken.values())[0]
+        print ('%s %s %s' % (info, url, token))
+
+if insecureForms:
+    print ('%s Insecure form(s) found' % good)
+    for insecureForm in insecureForms:
+        url = list(insecureForm.keys())[0]
+        action = list(insecureForm.values())[0]['action']
+        form = action.replace(target, '')
+        if form:
+            print ('%s %s %s[%s%s%s]%s' %
+                   (bad, url, green, end, form, green, end))
+
+
