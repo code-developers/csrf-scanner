@@ -190,6 +190,18 @@ print (' %s Phase: Observing %s[%s4/6%s]%s' %
        (lightning, green, end, green, end))
 print ('%s 100 simultaneous requests are being made, please wait.' % info)
 
+def extractForms(url):
+    response = requester(url, {}, header)
+    forms = zetanize(url, response)
+    for each in forms.values():
+        localTokens = set()
+        inputs = each['inputs']
+        for inp in inputs['inputs']:
+            value = inp['value']
+            if value and re.match(r'^[\w\-_]+$', value):
+                if strenghts(value) > 10:
+                    simTokens.append(value)
+
 
 
 
