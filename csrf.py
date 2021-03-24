@@ -162,4 +162,34 @@ except statistics.StatisticsError:
     print('%s No CSRF protection to test' % bad)
     quit()
 
+def staticParts(allTokens):
+    strings = list(set(allTokens.copy()))
+    commonSubstrings = {}
+    for theString in strings:
+        strings.remove(theString)
+        for string in strings:
+            commonSubstring = longestCommonSubstring(theString, string)
+            if commonSubstring not in commonSubstrings:
+                commonSubstrings[commonSubstring] = []
+            if len(commonSubstring) > 2:
+                if theString not in commonSubstrings[commonSubstring]:
+                    commonSubstrings[commonSubstring].append(theString)
+                if string not in commonSubstrings[commonSubstring]:
+                    commonSubstrings[commonSubstring].append(string)
+    return commonSubstrings
+
+result = {k: v for k, v in staticParts(allTokens).items() if v}
+
+if result:
+    print('common substring found')
+    print(json.dumps(result, indent=4))
+
+simTokens = []
+
+print (' %s Phase: Observing %s[%s4/6%s]%s' %
+       (lightning, green, end, green, end))
+print ('%s 100 simultaneous requests are being made, please wait.' % info)
+
+
+
 
