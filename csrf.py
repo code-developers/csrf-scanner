@@ -103,3 +103,28 @@ if insecureForms:
                    (bad, url, green, end, form, green, end))
 
 
+print (' %s Phase: Comparing %s[%s3/6%s]%s' %
+       (lightning, green, end, green, end))
+uniqueTokens = set(allTokens)
+if len(uniqueTokens) < len(allTokens):
+    print('%s Potential Replay Attack condition found' % good)
+    print('%s Verifying and looking for the cause' % run)
+    replay = False
+    for url, token in tokenDatabase:
+        for url2, token2 in tokenDatabase:
+            if token == token2 and url != url2:
+                print('%s The same token was used on %s%s%s and %s%s%s' %
+                      (good, green, url, end, green, url2, end))
+                replay = True
+    if not replay:
+        print('%s Further investigation shows that it was a false positive.')
+
+with open('./db/hashes.json') as f:
+    hashPatterns = json.load(f)
+
+if not allTokens:
+    print('%s No CSRF protection to test' % bad)
+    quit()
+
+aToken = allTokens[0]
+matches = []
