@@ -137,3 +137,29 @@ if matches:
     print('%s Token matches the pattern of following hash type(s):' % info)
     for name in matches:
         print('    %s>%s %s' % (yellow, end, name))
+
+def fuzzy(tokens):
+    averages = []
+    for token in tokens:
+        sameTokenRemoved = False
+        result = process.extract(token, tokens, scorer=fuzz.partial_ratio)
+        scores = []
+        for each in result:
+            score = each[1]
+            if score == 100 and not sameTokenRemoved:
+                sameTokenRemoved = True
+                continue
+            scores.append(score)
+        average = statistics.mean(scores)
+        averages.append(average)
+    return statistics.mean(averages)
+
+try:
+    similarity = fuzzy(allTokens)
+    print ('%s Tokens are %s%i%%%s similar to each other on an average' %
+           (info, green, similarity, end))
+except statistics.StatisticsError:
+    print('%s No CSRF protection to test' % bad)
+    quit()
+
+
