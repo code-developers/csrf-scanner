@@ -128,3 +128,12 @@ if not allTokens:
 
 aToken = allTokens[0]
 matches = []
+for element in hashPatterns:
+    pattern = element['regex']
+    if re.match(pattern, aToken):
+        for name in element['matches']:
+            matches.append(name)
+if matches:
+    print('%s Token matches the pattern of following hash type(s):' % info)
+    for name in matches:
+        print('    %s>%s %s' % (yellow, end, name))
